@@ -1,0 +1,42 @@
+{
+  "name": "test_vue_blog",
+  "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "author": {
+    "name": "SalakhievIska"
+  },
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "element-ui": "^2.13.2",
+    "vue": "^3.0.0",
+    "vuex": "^3.5.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.8",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "_id": "test_vue_blog@1.0.0",
+  "bugs": {
+    "url": "https://github.com/SalakhievIska/test_vue_blog/issues"
+  },
+  "homepage": "https://github.com/SalakhievIska/test_vue_blog#readme",
+  "license": "ISC",
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SalakhievIska/test_vue_blog.git"
+  }
+}
