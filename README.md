@@ -15,3 +15,13 @@ npm run serve
 npm run build
 ```
 
+<<<<<<< Updated upstream
+=======
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
+>>>>>>> Stashed changes
