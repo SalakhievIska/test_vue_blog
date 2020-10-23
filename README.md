@@ -1,27 +1,20 @@
 # Test Vue Blog
+### Версия 1.1.0
 
-## Project setup
+
+Блог реализован на <b>Vue.js</b> с хранением данных в <b>Vuex</b>.<br>
+Дополнительно использовался <b>Element-ui</b><br>
+Сервер собран на <b>node.js</b><br>
+
+Данные обрабатываются с помощью Vuex и сохраняются в локальной памяти браузера
+
+Перед началом работы:
+##### 1. Установка необходимых зависимостей
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+##### 2. Запуск локального сервера
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-<<<<<<< Updated upstream
-=======
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
->>>>>>> Stashed changes
