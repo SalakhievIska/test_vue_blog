@@ -22,6 +22,7 @@
 import Vue from 'vue'
 import { mapMutations } from 'vuex'
 import { Button, FormItem, Input, Form, Dialog, MessageBox, Upload } from 'element-ui'
+import { v4 as uuidv4 } from 'uuid'
 
 Vue.component(Button.name, Button)
 Vue.component(FormItem.name, FormItem)
@@ -60,9 +61,9 @@ export default {
             postId: this.$route.params.id,
             title: this.commentForm.title,
             body: this.commentForm.body,
-            id: Date.now().toString()
+            id: uuidv4()
           })
-          this.title = this.body = ''
+          this.commentForm.title = this.commentForm.body = ''
           this.dialogVisible = false
           MessageBox.alert('Комментарий добавлен', 'Done!', {
             confirmButtonText: 'OK'

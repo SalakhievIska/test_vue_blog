@@ -12,14 +12,11 @@
         </el-form-item>
         <!-- <el-form-item prop="photoUrl">
           <el-upload
-            class="photo"
             v-model="postForm.photoUrl"
-            action=""
-            :before-upload="beforeUpload"
-            :show-file-list="true"
-            :limit=1>
-            <img v-if="postForm.photoUrl" :src="postForm.photoUrl">
-            <i v-else class="el-icon-plus photo-icon"></i>
+            action="https://up.flickr.com/services/upload/&oauth_consumer_key=f1d25eabebc5e3cea7e589d781ace5a2"
+            :limit="1"
+            :auto-upload="true">
+            <i class="el-icon-download icon"></i>
           </el-upload>
         </el-form-item> -->
         <el-form-item>
@@ -33,7 +30,9 @@
 <script>
 import Vue from 'vue'
 import { mapMutations } from 'vuex'
+import Axios from 'axios'
 import { Button, FormItem, Input, Form, Dialog, MessageBox, Upload } from 'element-ui'
+import { v4 as uuidv4 } from 'uuid'
 
 Vue.component(Button.name, Button)
 Vue.component(FormItem.name, FormItem)
@@ -48,8 +47,7 @@ export default {
     return {
       postForm: {
         title: '',
-        body: '',
-        photoUrl: ''
+        body: ''
       },
       dialogVisible: false,
       rules: {
@@ -67,13 +65,13 @@ export default {
   methods: {
     ...mapMutations(['createPost']),
     submitNewPost (formName) {
-      this.$refs[formName].validate((valid, file) => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           this.createPost({
             title: this.postForm.title,
             body: this.postForm.body,
-            photoUrl: this.imageUrl,
-            id: Date.now().toString()
+            photoUrl: this.postForm.photoUrl,
+            id: uuidv4()
           })
           this.postForm.title = this.postForm.body = ''
           this.dialogVisible = false
@@ -85,7 +83,78 @@ export default {
         }
       })
     }
+    // upload (file) {
+    //   console.log(this.postForm.photoUrl)
+    //   let formData = new FormData()
+    //   formData.append('file', file)
+
+    //   Axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
+    //   Axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
+    //   Axios({
+    //       method: 'POST',
+    //       url: "https://jsonplaceholder.typicode.com/photos",
+    //       data: formData,
+    //   }).then((response)=>{
+    //       console.log(response)
+    //   }).catch((error)=>{
+    //       console.log(error)
+    //   })
+    // }
   }
 }
 
 </script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+
+#index {
+  font-family: 'Raleway', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: black;
+  margin-top: 60px;
+}
+
+h1 {
+  margin: 50px auto;
+}
+
+h3 {
+  font-size: 35px;
+}
+
+#posts {
+  width: 65%;
+  margin: 20px auto;
+}
+
+.link {
+  text-decoration: none;
+  color: black;
+}
+
+.link:hover {
+  text-decoration: none;
+  color: #1e2b38;
+}
+
+.el-button {
+  padding: 15px 20px;
+  font-size: 20px;
+}
+
+.icon {
+  font-size: 25px;
+  color: #8c939d;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .el-dialog {
+    width: 80% !important;
+  }
+}
+</style>
+

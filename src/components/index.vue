@@ -82,36 +82,4 @@ h3 {
   font-size: 20px;
 }
 
-.photo .el-upload {
-  border: 1px dashed #DCDFE6;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.photo .el-upload:hover {
-  border-color: #0655a6;
-}
-
-.photo-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-
-.photo {
-  width: 300px;
-  height: 178px;
-  display: block;
-  margin: 0 auto;
-}
-
-@media (max-width: 800px) {
-  .el-dialog {
-    width: 80% !important;
-  }
-}
 </style>

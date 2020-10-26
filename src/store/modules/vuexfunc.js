@@ -8,12 +8,26 @@ export default {
     createPost (state, newPost) {
       state.posts.unshift(newPost)
     },
+    deletePost (state, postId) {
+      let index = state.posts.findIndex(post => post.id == postId);
+      state.posts.splice(index, 1)
+
+      let comments = state.comments.filter(comment => comment.postId === postId)
+      for (let i=0; i < comments.length; i++) {
+        index = state.comments.findIndex(comment => comment.postId == postId);
+        state.comments.splice(index, 1)
+      }
+    },
 
     updateComments (state, comments) {
       state.comments = comments
     },
     createComment (state, newComment) {
       state.comments.unshift(newComment)
+    },
+    deleteComment (state, commentId) {
+      let index = state.comments.findIndex(comment => comment.id == commentId);
+      state.comments.splice(index, 1)
     }
   },
   state: {

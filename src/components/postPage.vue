@@ -3,14 +3,16 @@
     <div id="posts">
       <h2>{{ post.title }}</h2>
       <p>{{ post.body }}</p>
-      <img v-if="post.photoUrl" :src="post.photoUrl" alt="Фото блога">
+      <!-- <img v-if="post.photoUrl" :src="post.photoUrl" alt="Фото блога"> -->
       <el-link @click="go()" class="back">Назад</el-link>
+      <el-link @click="deletePostGo()" class="delete-post">Удалить</el-link>
       <hr>
       <commentForm/>
       <div v-if="comments">
-        <div id="comments" v-for="comment in comments" :key="comment.postId">
+        <div id="comments" v-for="comment in comments" :key="comment.id">
           <p>{{ comment.title }}</p>
           <p>{{ comment.body }}</p>
+          <i @click="deleteCommentGo(comment.id)" class="el-icon-delete delete-comment"></i>
         </div>
       </div>
     </div>
@@ -19,10 +21,13 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import store from './../store'
 import commentForm from './commentForm'
 import Meta from 'vue-meta'
+import { MessageBox } from 'element-ui'
+
+Vue.component(MessageBox.name, MessageBox)
 
 Vue.use(Meta)
 
@@ -47,8 +52,25 @@ export default {
     }
   },
   methods: {
-    go (postId) {
+    ...mapMutations(['deletePost', 'deleteComment']),
+
+    go () {
       this.$router.push({ name: 'index' })
+    },
+
+    deletePostGo () {
+      this.deletePost(this.$route.params.id)
+      MessageBox.alert('Запись удалена', 'Done!', {
+        confirmButtonText: 'OK'
+      })
+      this.$router.push({ name: 'index' })
+    },
+
+    deleteCommentGo (commentId) {
+      this.deleteComment(commentId)
+      MessageBox.alert('Комментарий удален', 'Done!', {
+        confirmButtonText: 'OK'
+      })
     }
   },
   components: { commentForm }
@@ -97,6 +119,24 @@ h2 {
   position: relative;
   float: left;
   font-size: 20px;
+}
+
+.delete-post {
+  position: relative;
+  float: right;
+  font-size: 20px;
+}
+
+.delete-comment {
+  vertical-align: super;
+}
+
+.delete-comment:hover {
+  cursor: pointer;
+}
+
+.el-message-box__content p {
+  font-size: 18px;
 }
 
 hr {

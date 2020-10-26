@@ -14,7 +14,7 @@ const router = new VueRouter({
   mode: 'history',
   routes: [
     { path: '/', name: 'index', component: index },
-    { path: '/:id', name: 'page', component: postPage }
+    { path: '/pages?id=:id', name: 'page', component: postPage }
   ]
 })
 
