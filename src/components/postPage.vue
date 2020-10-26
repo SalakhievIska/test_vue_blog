@@ -4,8 +4,8 @@
       <h2>{{ post.title }}</h2>
       <p>{{ post.body }}</p>
       <img v-if="post.photoUrl" :src="post.photoUrl" alt="Фото блога">
-      <el-link @click="go()" class="back">Назад</el-link>
-      <el-link @click="deletePostGo()" class="delete-post">Удалить</el-link>
+      <el-link @click="go()" class="back"><i class="el-icon-back"></i> Назад</el-link>
+      <el-link @click="deletePostGo()" class="delete-post">Удалить <i class="el-icon-delete"></i></el-link>
       <hr>
       <commentForm/>
       <div v-if="comments">

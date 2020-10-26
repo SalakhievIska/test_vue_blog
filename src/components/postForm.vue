@@ -12,11 +12,12 @@
         </el-form-item>
         <el-form-item prop="photoUrl">
           <el-upload
-            v-model="postForm.photoUrl"
+            ref="upload"
             action="http://localhost:5000/upload"
-            :on-success="upload"
+            :on-success="uploadPhoto"
+            :on-remove="removePhoto"
             :limit="1">
-            <i class="el-icon-download icon"></i>
+            <i v-if="!file" class="el-icon-plus icon"></i>
           </el-upload>
         </el-form-item>
         <el-form-item>
@@ -47,9 +48,9 @@ export default {
     return {
       postForm: {
         title: '',
-        body: '',
-        photoUrl: ''
+        body: ''
       },
+      file: '',
       dialogVisible: false,
       rules: {
         title: [
@@ -74,10 +75,12 @@ export default {
             photoUrl: this.file,
             id: uuidv4()
           })
-          this.postForm.title = this.postForm.body = ''
+          this.postForm.title = this.postForm.body = this.file = ''
+          this.$refs.upload.clearFiles()
           this.dialogVisible = false
           MessageBox.alert('Запись добавлена', 'Done!', {
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            center: true
           })
         } else {
           return false
@@ -85,8 +88,13 @@ export default {
       })
     },
 
-    upload (response) {
+    uploadPhoto (response) {
       this.file = response.photoUrl
+    },
+
+    removePhoto (file) {
+      Axios.get(this.file.replace('getPhoto', 'removePhoto'))
+      this.file = ''
     }
   }
 }
@@ -126,6 +134,10 @@ h3 {
 .link:hover {
   text-decoration: none;
   color: #1e2b38;
+}
+
+.el-dialog__title {
+  font-size: 23px;
 }
 
 .el-button {

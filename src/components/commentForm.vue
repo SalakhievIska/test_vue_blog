@@ -66,7 +66,8 @@ export default {
           this.commentForm.title = this.commentForm.body = ''
           this.dialogVisible = false
           MessageBox.alert('Комментарий добавлен', 'Done!', {
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+            center: true
           })
         } else {
           return false

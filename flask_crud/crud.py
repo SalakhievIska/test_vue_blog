@@ -28,6 +28,10 @@ def upload():
     if request.method == 'POST':
         file = request.files['file']
         filename = str(uuid.uuid4()) + '.' + file.filename.split('.')[-1]
+
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.mkdir(app.config['UPLOAD_FOLDER'])
+
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         response_object['photoUrl'] = f'http://localhost:5000/getPhoto/{filename}'
 
@@ -40,6 +44,12 @@ def upload():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
+
+
+@app.route('/removePhoto/<filename>', methods=['GET'])
+def removed_file(filename):
+    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+    return jsonify({'status': 'success'})
 
 
 if __name__ == '__main__':
