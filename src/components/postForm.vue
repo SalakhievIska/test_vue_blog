@@ -10,15 +10,15 @@
         <el-form-item label="Текст поста" prop="body">
           <el-input v-model="postForm.body"></el-input>
         </el-form-item>
-        <!-- <el-form-item prop="photoUrl">
+        <el-form-item prop="photoUrl">
           <el-upload
             v-model="postForm.photoUrl"
-            action="https://up.flickr.com/services/upload/&oauth_consumer_key=f1d25eabebc5e3cea7e589d781ace5a2"
-            :limit="1"
-            :auto-upload="true">
+            action="http://localhost:5000/upload"
+            :on-success="upload"
+            :limit="1">
             <i class="el-icon-download icon"></i>
           </el-upload>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitNewPost('postForm')">Сохранить</el-button>
         </el-form-item>
@@ -47,7 +47,8 @@ export default {
     return {
       postForm: {
         title: '',
-        body: ''
+        body: '',
+        photoUrl: ''
       },
       dialogVisible: false,
       rules: {
@@ -70,7 +71,7 @@ export default {
           this.createPost({
             title: this.postForm.title,
             body: this.postForm.body,
-            photoUrl: this.postForm.photoUrl,
+            photoUrl: this.file,
             id: uuidv4()
           })
           this.postForm.title = this.postForm.body = ''
@@ -82,24 +83,11 @@ export default {
           return false
         }
       })
-    }
-    // upload (file) {
-    //   console.log(this.postForm.photoUrl)
-    //   let formData = new FormData()
-    //   formData.append('file', file)
+    },
 
-    //   Axios.defaults.headers.post['Content-Type'] = 'multipart/form-data'
-    //   Axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
-    //   Axios({
-    //       method: 'POST',
-    //       url: "https://jsonplaceholder.typicode.com/photos",
-    //       data: formData,
-    //   }).then((response)=>{
-    //       console.log(response)
-    //   }).catch((error)=>{
-    //       console.log(error)
-    //   })
-    // }
+    upload (response) {
+      this.file = response.photoUrl
+    }
   }
 }
 

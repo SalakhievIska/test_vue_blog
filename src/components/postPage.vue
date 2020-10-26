@@ -3,7 +3,7 @@
     <div id="posts">
       <h2>{{ post.title }}</h2>
       <p>{{ post.body }}</p>
-      <!-- <img v-if="post.photoUrl" :src="post.photoUrl" alt="Фото блога"> -->
+      <img v-if="post.photoUrl" :src="post.photoUrl" alt="Фото блога">
       <el-link @click="go()" class="back">Назад</el-link>
       <el-link @click="deletePostGo()" class="delete-post">Удалить</el-link>
       <hr>
@@ -87,6 +87,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  width: 65%;
+  margin: 50px auto;
 }
 
 h2 {
@@ -94,9 +96,9 @@ h2 {
   font-size: 40px;
 }
 
-#page {
-  width: 65%;
-  margin: 50px auto;
+#page img{
+  width: 50%;
+  margin: 0 auto;
 }
 
 #comments {
