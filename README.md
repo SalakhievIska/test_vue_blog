@@ -18,28 +18,15 @@
 Данные обрабатываются с помощью Vuex и сохраняются в локальной памяти браузера
 
 Перед началом работы:
-##### 1. Установка необходимых зависимостей
+##### 1. Запустить Docker.
+
+##### 2. Установить необходимые контейнеры
 ```
-npm install
+cd test_vue_blog
+docker-compose build
 ```
 
-##### 2. Запуск локального сервера
+##### 3. После установки запустить контейнеры Докера
 ```
-npm run serve
-```
-
-##### 3. Установка необходимых библиотек python
-```
-python -m venv env
-env\Scripts\activate.bat
-
-pip install -r requirements.txt
-```
-
-##### 4. Запуск сервера Flask
-```
-cd flask_crud
-env\Scripts\activate.bat
-
-python crud.py
+docker-compose up
 ```
