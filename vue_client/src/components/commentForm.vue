@@ -8,7 +8,7 @@
           <el-input v-model="commentForm.title"></el-input>
         </el-form-item>
         <el-form-item label="Текст комментария" prop="body">
-          <el-input v-model="commentForm.body"></el-input>
+          <el-input type="textarea" v-model="commentForm.body"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="submitNewComment('commentForm')">Сохранить</el-button>
@@ -47,7 +47,7 @@ export default {
         ],
         body: [
           { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 16, max: 64, message: 'Длина текста от 16 до 64 символов', trigger: 'blur' }
+          { min: 12, max: 64, message: 'Длина текста от 12 до 64 символов', trigger: 'blur' }
         ]
       }
     }
