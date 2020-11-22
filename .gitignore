@@ -3,6 +3,7 @@ node_modules
 /dist
 env
 uploads-photo
+packege-lock.json
 
 
 # local env files
