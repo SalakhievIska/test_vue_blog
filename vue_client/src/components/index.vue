@@ -1,6 +1,7 @@
 <template>
   <div id="index">
     <h1>Тестовый блог BlogQA</h1><hr>
+    <registerForm/>
     <postForm/>
     <div id="posts" v-for="post in allPosts" :key="post.id">
       <el-link @click="go(post.id)" class="link">
@@ -15,6 +16,7 @@ import Vue from 'vue'
 import { mapGetters } from 'vuex'
 import store from './../store'
 import postForm from './postForm'
+import registerForm from './registerForm'
 import { Link } from 'element-ui'
 import Meta from 'vue-meta'
 
@@ -37,7 +39,7 @@ export default {
       this.$router.push({ name: 'page', params: { id: postId } })
     }
   },
-  components: { postForm }
+  components: { postForm, registerForm }
 }
 
 </script>

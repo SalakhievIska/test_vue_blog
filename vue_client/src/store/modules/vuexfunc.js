@@ -28,11 +28,16 @@ export default {
     deleteComment (state, commentId) {
       let index = state.comments.findIndex(comment => comment.id == commentId);
       state.comments.splice(index, 1)
+    },
+
+    createAccount (state, newAccount) {
+      state.accounts.unshift(newAccount)
     }
   },
   state: {
     posts: [],
-    comments: []
+    comments: [],
+    accounts: [],
   },
   getters: {
     allPosts: (state) => {
