@@ -1,8 +1,9 @@
 <template>
   <div>
-    <el-button @click="dialogVisible = true" style="margin-bottom: 20px;">Создать аккаунт</el-button>
+    <el-button @click="dialogVisible.register = true" style="margin-bottom: 20px;">Создать аккаунт</el-button>
+    <el-button @click="dialogVisible.login = true" style="margin-bottom: 20px;">Войти</el-button>
 
-    <el-dialog title="Регистрация" :visible.sync="dialogVisible" width="20%">
+    <el-dialog title="Регистрация" :visible.sync="dialogVisible.register" width="20%">
       <el-form :model="registerForm" :rules="rules" ref="registerForm" class="registerForm">
         <el-form-item label="Никнейм" prop="nickname">
           <el-input v-model="registerForm.nickname"></el-input>
@@ -11,10 +12,24 @@
           <el-input v-model="registerForm.mail"></el-input>
         </el-form-item>
         <el-form-item label="Пароль" prop="password">
-          <el-input v-model="registerForm.password"></el-input>
+          <el-input v-model="registerForm.password" :show-password="true"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitNewAccount('registerForm')">Создать</el-button>
+          <el-button type="primary" @click="submitNewAccount()">Создать</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+
+    <el-dialog title="Вход" :visible.sync="dialogVisible.login" width="20%">
+      <el-form :model="loginForm" :rules="rules" ref="loginForm" class="loginForm">
+        <el-form-item label="Майл" prop="mail">
+          <el-input v-model="loginForm.mail"></el-input>
+        </el-form-item>
+        <el-form-item label="Пароль" prop="password">
+          <el-input v-model="loginForm.password" :show-password="true"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="submitLogin()">Войти</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -22,66 +37,97 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapMutations } from 'vuex'
-import { Button, FormItem, Input, Form, Dialog, MessageBox, Upload } from 'element-ui'
-import { v4 as uuidv4 } from 'uuid'
+import { Vue, Component } from 'vue-property-decorator';
+import { Button, FormItem, Input, Form, Dialog, MessageBox, Upload } from 'element-ui';
+import { v4 as uuidv4 } from 'uuid';
 
-Vue.component(Button.name, Button)
-Vue.component(FormItem.name, FormItem)
-Vue.component(Input.name, Input)
-Vue.component(Form.name, Form)
-Vue.component(Dialog.name, Dialog)
-Vue.component(MessageBox.name, MessageBox)
-Vue.component(Upload.name, Upload)
-
-export default {
-  data () {
-    return {
-      registerForm: {
-        nickname: '',
-        mail: '',
-        password: '',
-      },
-      dialogVisible: false,
-      rules: {
-        nickname: [
-          { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 4, max: 32, message: 'Длина заголовка от 4 до 32 символов', trigger: 'blur' }
-        ],
-        mail: [
-          { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 3, max: 20, message: 'Длина текста от 3 до 20 символов', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 3, max: 20, message: 'Длина текста от 3 до 20 символов', trigger: 'blur' }
-        ]
-      }
-    }
+@Component({
+  name: 'RegisterLoginForm',
+  components: {
+    ElButton: Button,
+    ElFormItem: FormItem,
+    ElInput: Input,
+    ElForm: Form,
+    ElDialog: Dialog,
+    ElUpload: Upload,
+    ElMessageBox: MessageBox,
   },
-  methods: {
-    ...mapMutations(['createAccount']),
-    submitNewAccount (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.createAccount({
-            nickname: this.registerForm.nickname,
-            mail: this.registerForm.mail,
-            password: this.registerForm.password,
-            id: uuidv4(),
-          })
-          this.registerForm.nickname = this.registerForm.mail = this.registerForm.password = ''
-          this.dialogVisible = false
-          MessageBox.alert('Пользователь создан', 'Done!', {
-            confirmButtonText: 'OK',
-            center: true
-          })
-        } else {
-          return false
+})
+export default class RegisterLoginForm extends Vue {
+  registerForm = {
+    nickname: '',
+    mail: '',
+    password: '',
+  };
+
+  loginForm = {
+    mail: '',
+    password: '',
+  };
+
+  dialogVisible = {
+    login: false,
+    register: false,
+  };
+
+  rules = {
+    nickname: [
+      { required: true, message: 'Обязательное поле', trigger: 'blur' },
+      { min: 4, max: 32, message: 'Длина заголовка от 4 до 32 символов', trigger: 'blur' }
+    ],
+    mail: [
+      { required: true, message: 'Обязательное поле', trigger: 'blur' },
+      { min: 3, max: 20, message: 'Длина текста от 3 до 20 символов', trigger: 'blur' }
+    ],
+    password: [
+      { required: true, message: 'Обязательное поле', trigger: 'blur' },
+      { min: 3, max: 20, message: 'Длина текста от 3 до 20 символов', trigger: 'blur' }
+    ]
+  };
+
+  submitNewAccount() {
+    this.$refs.registerForm.validate((valid) => {
+      if (valid) {
+        const newAccount = {
+          nickname: this.registerForm.nickname,
+          mail: this.registerForm.mail,
+          password: this.registerForm.password,
+          token: uuidv4(),
         }
+
+        this.$store.commit('createAccount', newAccount)
+        this.registerForm.nickname = this.registerForm.mail = this.registerForm.password = ''
+        this.loginForm.mail = this.loginForm.password = ''
+        this.dialogVisible.register = false
+
+        MessageBox.alert('Пользователь создан', 'Done!', {
+          confirmButtonText: 'OK',
+          center: true
+        })
+      } else {
+        return false
+      }
+    })
+  }
+
+  submitLogin() {
+    if (this.$store.getters.getAccount(this.loginForm.mail, this.loginForm.password).length === 1) {
+      this.$store.commit('loginAccount', 
+                         {mail: this.loginForm.mail, password: this.loginForm.password})
+      
+      this.loginForm.mail = this.loginForm.password = ''
+      this.dialogVisible.login = false
+      MessageBox.alert('Вход успешен!', 'Done!', {
+        confirmButtonText: 'OK',
+        center: true
       })
-    },
+      this.$parent.$emit('login');
+    } else {
+      MessageBox.alert('Такого аккаунта нет', 'Error!', {
+        confirmButtonText: 'OK',
+        center: true
+      })
+    }
   }
 }
 

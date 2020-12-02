@@ -1,8 +1,15 @@
 <template>
   <div id="index">
     <h1>Тестовый блог BlogQA</h1><hr>
-    <registerForm/>
-    <postForm/>
+    <div v-if="userIsLogin">
+      <i class="el-icon-user-solid"></i>
+      <p style="margin-top: 0; margin-bottom: 20px; font-size: 25px; font-weight: bold;">{{ nick }}</p>
+      <el-button @click="logOut" style="margin-bottom: 20px;">Выход</el-button>
+      <postForm/>
+    </div>
+    <div v-else>
+      <registerForm/>
+    </div>
     <div id="posts" v-for="post in allPosts" :key="post.id">
       <el-link @click="go(post.id)" class="link">
         <h3>{{ post.title }}</h3>
@@ -12,34 +19,57 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapGetters } from 'vuex'
-import store from './../store'
+import { Vue, Component } from 'vue-property-decorator';
 import postForm from './postForm'
 import registerForm from './registerForm'
 import { Link } from 'element-ui'
 import Meta from 'vue-meta'
 
-Vue.use(Meta)
-Vue.component(Link.name, Link)
+@Component({
+  name: 'Index',
+  components: {
+    ElLink: Link,
+    postForm,
+    registerForm,
+    Meta,
+  }
+})
+export default class Index extends Vue {
+  userIsLogin = false;
 
-export default {
-  store,
-  name: 'index',
-  metaInfo: {
+  get allPosts() {
+    return this.$store.getters.allPosts;
+  }
+
+  get nick() {
+    return this.$store.getters.getUserNick
+  }
+
+  metaInfo = {
     title: 'Тестовый блог BlogQA',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
     ]
-  },
-  computed: mapGetters(['allPosts']),
-  methods: {
-    go (postId) {
-      this.$router.push({ name: 'page', params: { id: postId } })
-    }
-  },
-  components: { postForm, registerForm }
+  };
+
+  go (postId) {
+    this.$router.push({ name: 'page', params: { id: postId } })
+  }
+
+  logOut() {
+    this.$store.commit('logoutAccount');
+    this.userIsLogin = false;
+  }
+
+  mounted() {
+    if (this.$store.getters.checkUser) this.userIsLogin = true;
+    else this.userIsLogin = false;
+
+    this.$on('login', () => {
+      this.userIsLogin = true
+    })
+  }
 }
 
 </script>

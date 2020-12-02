@@ -19,62 +19,64 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapMutations } from 'vuex'
-import { Button, FormItem, Input, Form, Dialog, MessageBox, Upload } from 'element-ui'
-import { v4 as uuidv4 } from 'uuid'
+import { Vue, Component } from 'vue-property-decorator';
+import { Button, FormItem, Input, Form, Dialog, MessageBox, Upload } from 'element-ui';
+import { v4 as uuidv4 } from 'uuid';
 
-Vue.component(Button.name, Button)
-Vue.component(FormItem.name, FormItem)
-Vue.component(Input.name, Input)
-Vue.component(Form.name, Form)
-Vue.component(Dialog.name, Dialog)
-Vue.component(MessageBox.name, MessageBox)
-Vue.component(Upload.name, Upload)
-
-export default {
-  data () {
-    return {
-      commentForm: {
-        title: '',
-        body: ''
-      },
-      dialogVisible: false,
-      rules: {
-        title: [
-          { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 4, max: 32, message: 'Длина заголовка от 4 до 32 символов', trigger: 'blur' }
-        ],
-        body: [
-          { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 12, max: 64, message: 'Длина текста от 12 до 64 символов', trigger: 'blur' }
-        ]
-      }
-    }
+@Component({
+  name: 'CommentForm',
+  components: {
+    ElButton: Button,
+    ElFormItem: FormItem,
+    ElInput: Input,
+    ElForm: Form,
+    ElDialog: Dialog,
+    ElUpload: Upload,
+    ElMessageBox: MessageBox,
   },
-  methods: {
-    ...mapMutations(['createComment']),
-    submitNewComment (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.createComment({
-            postId: this.$route.params.id,
-            title: this.commentForm.title,
-            body: this.commentForm.body,
-            id: uuidv4()
-          })
-          this.commentForm.title = this.commentForm.body = ''
-          this.dialogVisible = false
-          MessageBox.alert('Комментарий добавлен', 'Done!', {
-            confirmButtonText: 'OK',
-            center: true
-          })
-        } else {
-          return false
+})
+export default class CommentForm extends Vue {
+  commentForm = {
+    title: '',
+    body: ''
+  };
+
+  dialogVisible = false;
+
+  rules = {
+    title: [
+      { required: true, message: 'Обязательное поле', trigger: 'blur' },
+      { min: 4, max: 32, message: 'Длина заголовка от 4 до 32 символов', trigger: 'blur' }
+    ],
+    body: [
+      { required: true, message: 'Обязательное поле', trigger: 'blur' },
+      { min: 12, max: 64, message: 'Длина текста от 12 до 64 символов', trigger: 'blur' }
+    ]
+  };
+
+  submitNewComment () {
+    this.$refs.commentForm.validate((valid) => {
+      if (valid) {
+        const comment = {
+          postId: this.$route.params.id,
+          title: this.commentForm.title,
+          body: this.commentForm.body,
+          id: uuidv4()
         }
-      })
-    }
-  }
+
+        this.$store.commit('createComment', comment)
+        this.commentForm.title = this.commentForm.body = ''
+        this.dialogVisible = false
+        MessageBox.alert('Комментарий добавлен', 'Done!', {
+          confirmButtonText: 'OK',
+          center: true
+        })
+      } else {
+        return false
+      }
+    })
+  };
+
 }
 
 </script>

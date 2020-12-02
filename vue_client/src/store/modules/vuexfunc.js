@@ -12,7 +12,7 @@ export default {
       let index = state.posts.findIndex(post => post.id == postId);
       state.posts.splice(index, 1)
 
-      let comments = state.comments.filter(comment => comment.postId === postId)
+      const comments = state.comments.filter(comment => comment.postId === postId)
       for (let i=0; i < comments.length; i++) {
         index = state.comments.findIndex(comment => comment.postId == postId);
         state.comments.splice(index, 1)
@@ -26,18 +26,32 @@ export default {
       state.comments.unshift(newComment)
     },
     deleteComment (state, commentId) {
-      let index = state.comments.findIndex(comment => comment.id == commentId);
+      const index = state.comments.findIndex(comment => comment.id == commentId);
       state.comments.splice(index, 1)
     },
 
     createAccount (state, newAccount) {
       state.accounts.unshift(newAccount)
+    },
+    loginAccount (state, info) {
+      state.user.token = state.accounts.find(
+        account => account.mail === info.mail && account.password === info.password
+      ).token
+      state.user.isLogin = true;
+    },
+    logoutAccount (state) {
+      state.user.token = '';
+      state.user.isLogin = false;
     }
   },
   state: {
     posts: [],
     comments: [],
     accounts: [],
+    user: {
+      token: '',
+      isLogin: null,
+    },
   },
   getters: {
     allPosts: (state) => {
@@ -49,6 +63,20 @@ export default {
 
     neededComments: (state) => (postId) => {
       return state.comments.filter(comment => comment.postId === postId)
+    },
+
+    getAccount: (state) => (mail, password) => {
+      return state.accounts.filter(
+        account => account.mail === mail && account.password === password
+      )
+    },
+    getUserNick: (state) => {
+      return state.accounts.find(
+        account => account.token === state.user.token
+      ).nickname
+    },
+    checkUser: (state) => {
+      return state.user.isLogin
     }
   }
 }

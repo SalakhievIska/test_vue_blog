@@ -7,17 +7,19 @@
   },
   "scripts": {
     "serve": "vue-cli-service serve",
+    "o-serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "axios": "^0.21.0",
+    "babel-plugin-component": "^1.1.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.13.2",
-    "typescript": "^4.1.2",
     "uuid": "^8.3.1",
     "vue": "^2.6.12",
+    "vue-class-component": "^7.2.6",
     "vue-meta": "^2.4.0",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.4.7",
