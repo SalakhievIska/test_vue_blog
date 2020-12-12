@@ -12,7 +12,7 @@
         <div id="comments" v-for="comment in comments" :key="comment.id">
           <p>{{ comment.title }}</p>
           <p>{{ comment.body }}</p>
-          <i @click="deleteCommentGo(comment.id)" class="el-icon-delete delete-comment"></i>
+          <!--<i @click="deleteCommentGo(comment.id)" class="el-icon-delete delete-comment"></i>-->
         </div>
       </div>
     </div>
@@ -20,60 +20,58 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapGetters, mapMutations } from 'vuex'
+import { Vue, Component } from 'vue-property-decorator';
 import store from './../store'
 import commentForm from './commentForm'
 import Meta from 'vue-meta'
-import { MessageBox } from 'element-ui'
+import { MessageBox, Link } from 'element-ui'
 
-Vue.component(MessageBox.name, MessageBox)
-
-Vue.use(Meta)
-
-export default {
-  store,
-  name: 'page',
-  metaInfo: {
+@Component({
+  name: 'PostPage',
+  components: {
+    ElLink: Link,
+    ElMessageBox: MessageBox,
+    commentForm,
+    Meta,
+  }
+})
+export default class PostPage extends Vue {
+  metaInfo = {
     title: 'Тестовый блог BlogQA',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1.0' }
     ]
-  },
-  computed: {
-    ...mapGetters(['onePost', 'neededComments']),
-    post () { return this.onePost(this.$route.params.id) },
-    comments () { return this.neededComments(this.$route.params.id) }
-  },
-  data () {
-    return {
-      postId: this.$route.params.id
-    }
-  },
-  methods: {
-    ...mapMutations(['deletePost', 'deleteComment']),
+  }
 
-    go () {
-      this.$router.push({ name: 'index' })
-    },
+  postId = this.$router.currentRoute.params.id
 
-    deletePostGo () {
-      this.deletePost(this.$route.params.id)
-      MessageBox.alert('Запись удалена', 'Done!', {
-        confirmButtonText: 'OK'
-      })
-      this.$router.push({ name: 'index' })
-    },
+  get post() {
+    return this.$store.getters.onePost(this.postId)
+  }
 
-    deleteCommentGo (commentId) {
-      this.deleteComment(commentId)
-      MessageBox.alert('Комментарий удален', 'Done!', {
-        confirmButtonText: 'OK'
-      })
-    }
-  },
-  components: { commentForm }
+  get comments() {
+    return this.$store.getters.neededComments(this.postId)
+  }
+
+  go () {
+    this.$router.push({ name: 'index' })
+  }
+
+  deletePostGo () {
+    this.$state.commit('deletePost', postId)
+    MessageBox.alert('Запись удалена', 'Done!', {
+      confirmButtonText: 'OK'
+    })
+    this.$router.push({ name: 'index' })
+  }
+
+  deleteCommentGo (commentId) {
+    this.$state.commit('deleteComment', commentId)
+    MessageBox.alert('Комментарий удален', 'Done!', {
+      confirmButtonText: 'OK'
+    })
+  }
 }
 </script>
 

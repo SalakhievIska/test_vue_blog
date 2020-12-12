@@ -13,6 +13,8 @@
     <div id="posts" v-for="post in allPosts" :key="post.id">
       <el-link @click="go(post.id)" class="link">
         <h3>{{ post.title }}</h3>
+        <i class="el-icon-user-solid"></i>
+        <p style="margin-top: 5px;">{{ post.user }}</p>
       </el-link>
     </div>
   </div>
@@ -22,13 +24,14 @@
 import { Vue, Component } from 'vue-property-decorator';
 import postForm from './postForm'
 import registerForm from './registerForm'
-import { Link } from 'element-ui'
+import { Link, Button } from 'element-ui'
 import Meta from 'vue-meta'
 
 @Component({
   name: 'Index',
   components: {
     ElLink: Link,
+    ElButton: Button,
     postForm,
     registerForm,
     Meta,
@@ -92,6 +95,7 @@ h1 {
 
 h3 {
   font-size: 35px;
+  margin-bottom: 15px;
 }
 
 #posts {

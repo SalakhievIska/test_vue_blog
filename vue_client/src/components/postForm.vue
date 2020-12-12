@@ -29,73 +29,76 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import { mapMutations } from 'vuex'
+import { Vue, Component } from 'vue-property-decorator';
 import Axios from 'axios'
 import { Button, FormItem, Input, Form, Dialog, MessageBox, Upload } from 'element-ui'
 import { v4 as uuidv4 } from 'uuid'
 
-Vue.component(Button.name, Button)
-Vue.component(FormItem.name, FormItem)
-Vue.component(Input.name, Input)
-Vue.component(Form.name, Form)
-Vue.component(Dialog.name, Dialog)
-Vue.component(MessageBox.name, MessageBox)
-Vue.component(Upload.name, Upload)
+@Component({
+  name: 'PostForm',
+  components: {
+    ElButton: Button,
+    ElFormItem: FormItem,
+    ElInput: Input,
+    ElForm: Form,
+    ElDialog: Dialog,
+    ElMessageBox: MessageBox,
+    ElUpload: Upload,
+  }
+})
+export default class PostForm extends Vue{
+  postForm = {
+    title: '',
+    body: ''
+  }
 
-export default {
-  data () {
-    return {
-      postForm: {
-        title: '',
-        body: ''
-      },
-      file: '',
-      dialogVisible: false,
-      rules: {
-        title: [
-          { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 4, max: 32, message: 'Длина заголовка от 4 до 32 символов', trigger: 'blur' }
-        ],
-        body: [
-          { required: true, message: 'Обязательное поле', trigger: 'blur' },
-          { min: 12, max: 64, message: 'Длина текста от 12 до 64 символов', trigger: 'blur' }
-        ]
-      }
-    }
-  },
-  methods: {
-    ...mapMutations(['createPost']),
-    submitNewPost (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          this.createPost({
-            title: this.postForm.title,
-            body: this.postForm.body,
-            photoUrl: this.file,
-            id: uuidv4()
-          })
-          this.postForm.title = this.postForm.body = this.file = ''
-          this.$refs.upload.clearFiles()
-          this.dialogVisible = false
-          MessageBox.alert('Запись добавлена', 'Done!', {
-            confirmButtonText: 'OK',
-            center: true
-          })
-        } else {
-          return false
+  file = ''
+
+  dialogVisible = false
+
+  rules = {
+    title: [
+      { required: true, message: 'Обязательное поле', trigger: 'blur' },
+      { min: 4, max: 32, message: 'Длина заголовка от 4 до 32 символов', trigger: 'blur' }
+    ],
+    body: [
+      { required: true, message: 'Обязательное поле', trigger: 'blur' },
+      { min: 12, max: 64, message: 'Длина текста от 12 до 64 символов', trigger: 'blur' }
+    ]
+  }
+
+  submitNewPost (formName) {
+    this.$refs[formName].validate((valid) => {
+      if (valid) {
+        const newPost = {
+          title: this.postForm.title,
+          body: this.postForm.body,
+          photoUrl: this.file,
+          id: uuidv4(),
+          user: this.$store.getters.getUserNick
         }
-      })
-    },
 
-    uploadPhoto (response) {
-      this.file = response.photoUrl
-    },
+        this.$store.commit('createPost', newPost)
+        this.postForm.title = this.postForm.body = this.file = ''
+        this.$refs.upload.clearFiles()
+        this.dialogVisible = false
+        MessageBox.alert('Запись добавлена', 'Done!', {
+          confirmButtonText: 'OK',
+          center: true
+        })
+      } else {
+        return false
+      }
+    })
+  }
 
-    removePhoto (file) {
-      Axios.get(this.file.replace('getPhoto', 'removePhoto'))
-      this.file = ''
-    }
+  uploadPhoto (response) {
+    this.file = response.photoUrl
+  }
+
+  removePhoto (file) {
+    Axios.get(this.file.replace('getPhoto', 'removePhoto'))
+    this.file = ''
   }
 }
 
